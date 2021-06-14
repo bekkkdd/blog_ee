@@ -1,0 +1,25 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{partions/main}"
+>
+<div layout:fragment="contentOfSite">
+    <form th:action="@{/profile/edit}" method="post">
+        <div class="row mt-5">
+            <div class="mb-3">
+                <label for="title" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="title" name="username" th:value="${user.username}" placeholder="Insert title">
+            </div>
+            <div class="mb-3">
+                <label for="pas1" class="form-label">New password</label>
+                <input type="text" class="form-control" id="pas1" name="password1" placeholder="Insert new Password">
+            </div>
+            <div class="mb-3">
+                <label for="pas2" class="form-label">Choose Author</label>
+                <input type="text" class="form-control" id="pas2" name="password2" placeholder="Re - Insert new Password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </div>
+    </form>
+</div>
+</html>

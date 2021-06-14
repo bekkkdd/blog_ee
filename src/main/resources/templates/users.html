@@ -1,0 +1,17 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{partions/main}"
+>
+<div layout:fragment="contentOfSite">
+    <div class="row mt-5" th:each="user : ${users}">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0" th:text="${user.username}"></h3>
+            <div class="mb-1 text-muted" th:text="${user.email}"></div>
+            <a th:href="'users/' + ${user.id}" th:text="'User details'"></a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+            <img class="bd-placeholder-img" src="https://pbs.twimg.com/profile_images/1056599856452722689/FKXXa2UL_400x400.jpg" width="250" height="250" alt="">
+        </div>
+    </div>
+</div>
+</html>

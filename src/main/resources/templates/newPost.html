@@ -1,0 +1,24 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{partions/main}"
+>
+<div layout:fragment="contentOfSite">
+    <form th:action="@{/posts/new}" method="post" enctype="multipart/form-data">
+        <div class="row mt-5">
+            <div class="mb-3">
+                <label for="title" class="form-label">TITLE:</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Insert title">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Example textarea</label>
+                <textarea class="form-control" name="content" id="content" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="img" class="form-label">Example textarea</label>
+                <input type="file" class="form-control" name="img" id="img" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+</html>

@@ -1,0 +1,83 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{partions/main}"
+>
+<div layout:fragment="contentOfSite">
+    <div class="row mt-5">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0" th:text="${post.title}"></h3>
+            <div class="mb-1 text-muted" th:text="${post.postDate}"></div>
+            <p class="card-text mb-auto" th:text="${post.content}">This is a wider card with supporting text below as a
+                natural lead-in to additional content.</p>
+            <a th:href="'edit/' + ${post.id}" th:text="#{post.edit}"></a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+            <img class="bd-placeholder-img" src="https://i1.sndcdn.com/artworks-okKt1tIv85hoR3kr-j2YYew-t500x500.jpg"
+                 width="250" height="250" alt="">
+        </div>
+    </div>
+
+    <div id="comments" class="row mt-5">
+        <div class="card" style="width: 27rem;" th:each="comment : ${post.comments}">
+            <div class="card-header" th:text="${comment.author.username}">
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" th:text="${comment.content}"></li>
+                <li class="list-group-item" th:text="${comment.commentDate}"></li>
+            </ul>
+            <a href="#" th:onclick="'deleteComment(' + ${comment.id} + ')'">DELETE</a>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <input type="text" hidden="hidden" th:value="${postId}" id="post_id">
+        <div class="mb-3">
+            <textarea class="form-control" id="content" name="content"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="comment()">Comment</button>
+    </div>
+</div>
+</html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    function comment() {
+        var content = document.getElementById("content").value
+        var postId = document.getElementById("post_id").value
+        $.ajax({
+            url : "/comment",
+            data : {
+                "post_id" : postId,
+                content
+            },
+            type : "POST",
+            success : function(response) {
+                console.log(response);
+                document.getElementById("comments").innerHTML +=
+                    "<div class=\"card\" style=\"width: 27rem;\">\n" +
+                    "            <div class=\"card-header\">\n" +
+                    response.author +
+                    "            </div>\n" +
+                    "            <ul class=\"list-group list-group-flush\">\n" +
+                    "                <li class=\"list-group-item\">" + content + "</li>\n" +
+                    "                <li class=\"list-group-item\">" + response.time + "</li>\n" +
+                    "            </ul>\n" +
+                    "        </div>"
+
+            },
+            error : function(xhr, status, error) {
+                alert("SOME ERROR!")
+            }
+        });
+    }
+
+    function deleteComment(id){
+        $.ajax({
+            url : "/comment/" + id,
+            type : "DELETE",
+            success : function(response) {
+            },
+            error : function(xhr, status, error) {
+            }
+        });
+    }
+</script>
