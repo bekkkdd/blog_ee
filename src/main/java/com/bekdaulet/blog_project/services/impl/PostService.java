@@ -18,7 +18,7 @@ public class PostService {
     private PostRepository postRepository;
 
     public Post getPostById(Long id) {
-        return postRepository.findById(id).orElse(new Post(0L, "NO TITLE", "NO CONTENT", new Timestamp(System.currentTimeMillis()), null, new User(), new ArrayList<>()));
+        return postRepository.findById(id).get();
     }
 
     public List<Post> getAllPosts() {

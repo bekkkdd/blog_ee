@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User secUser
                 = (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
-        User user = userRepository.getUserByEmail(secUser.getUsername());
+        User user = userRepository.getUserByUsername(secUser.getUsername());
         return user;
     }
 
@@ -53,8 +53,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
+    }
+
     public User registerNewUserAccount(RegistrationUserDTO userDto) throws UserAlreadyExistException {
-        if (emailExist(userDto.getEmail())) {
+        if (emailExist(userDto.getEmail()) && usernameExist(userDto.getUsername())) {
             throw new UserAlreadyExistException("There is an account with that email address: "
                     + userDto.getEmail());
         }
@@ -64,6 +69,9 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         Role userRole = roleService.getRoleByName("USER");
+        if (userRole == null) {
+            roleService.addNewRole("USER");
+        }
         user.setRoles(Arrays.asList(userRole));
         return userRepository.save(user);
     }
@@ -72,14 +80,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.getUserByEmail(email) != null;
     }
 
+    private boolean usernameExist(String username) {
+        return userRepository.getUserByUsername(username) != null;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.getUserByEmail(s);
+        User user = userRepository.getUserByUsername(s);
         if (user == null) {
             throw new UsernameNotFoundException("User [" + s + "] not found!");
         }
         org.springframework.security.core.userdetails.User userDetails =
-                new org.springframework.security.core.userdetails.User(user.getEmail() , user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+                new org.springframework.security.core.userdetails.User(user.getUsername() , user.getPassword(), mapRolesToAuthorities(user.getRoles()));
 
         return userDetails;
     }

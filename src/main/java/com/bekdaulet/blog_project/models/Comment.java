@@ -22,7 +22,7 @@ public class Comment {
     @ManyToOne (fetch = FetchType.EAGER)
     private Post post;
 
-    @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne (fetch = FetchType.EAGER)
     private User author;
 
     @Column(name = "comment_time")

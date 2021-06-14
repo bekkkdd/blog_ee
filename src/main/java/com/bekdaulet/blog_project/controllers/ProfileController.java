@@ -1,15 +1,16 @@
 package com.bekdaulet.blog_project.controllers;
 
+import com.bekdaulet.blog_project.models.Post;
 import com.bekdaulet.blog_project.models.User;
 import com.bekdaulet.blog_project.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.List;
 
 @Controller
 @RequestMapping("profile")
@@ -19,6 +20,42 @@ public class ProfileController {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @GetMapping("{username}")
+    public String profilePage(
+            Model model,
+            @PathVariable String username
+    ){
+        User user = userService.getUserByUsername(username);
+        model.addAttribute("user", user);
+        return "profilePage";
+    }
+
+    @PostMapping("subscribe/{username}")
+    public String subscribeProfile(
+            Model model,
+            @PathVariable String username
+    ){
+        User user = userService.getUserByUsername(username);
+        User currentUser = userService.getCurrentUser();
+        currentUser.getChannels().add(user);
+        userService.saveUser(currentUser);
+        model.addAttribute("user", user);
+        return "redirect:/profile/" + username;
+    }
+
+    @PostMapping("unsubscribe/{username}")
+    public String unsubscribeProfile(
+            Model model,
+            @PathVariable String username
+    ){
+        User user = userService.getUserByUsername(username);
+        User currentUser = userService.getCurrentUser();
+        currentUser.getChannels().remove(user);
+        userService.saveUser(currentUser);
+        model.addAttribute("user", user);
+        return "redirect:/profile/" + username;
+    }
 
     @GetMapping("edit")
     public String profileEditPage(
@@ -47,5 +84,15 @@ public class ProfileController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("posts")
+    public String profilesPosts(
+            Model model
+    ){
+        User user = userService.getCurrentUser();
+        Collection<Post> postList = user.getPosts();
+        model.addAttribute("posty", postList);
+        return "posts";
     }
 }

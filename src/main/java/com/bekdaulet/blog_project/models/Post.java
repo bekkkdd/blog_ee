@@ -28,14 +28,9 @@ public class Post {
     @Column(name = "edit_date")
     private Timestamp editDate;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private User author;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "post_comments" ,
-            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
-    )
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User author;
 }

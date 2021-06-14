@@ -56,14 +56,7 @@ public class CommentController {
     private ResponseEntity comment(@PathVariable Long id){
         Comment comment = commentService.getCommentById(id);
         if(comment != null){
-            Post post = postService.getPostById(comment.getId());
-            List<Comment> comments = post.getComments().stream().filter(c -> c.getId() != comment.getId()).collect(Collectors.toList());
-            post.setComments(comments);
-            postService.savePost(post);
-            User user = userService.getCurrentUser();
-            if(user.getId().equals(comment.getAuthor().getId())){
-                commentService.deleteComment(comment);
-            }
+           commentService.deleteComment(comment);
         }
         return new ResponseEntity(HttpStatus.OK);
     }

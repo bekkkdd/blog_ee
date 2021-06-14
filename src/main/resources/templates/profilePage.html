@@ -1,0 +1,19 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{partions/main}"
+>
+<div layout:fragment="contentOfSite">
+    <h2 th:text="${user.getSubscribers().size()}"></h2>
+    <h2 th:text="${user.getChannels().size()}"></h2>
+    <form th:action="@{|/profile/subscribe/${user.getUsername()}|}" method="post">
+        <button type="submit">
+            SUBSCRIBE
+        </button>
+    </form>
+    <form th:action="@{|/profile/unsubscribe/${user.getUsername()}|}" method="post">
+        <button type="submit">
+            UNSUBSCRIBE
+        </button>
+    </form>
+</div>
+</html>

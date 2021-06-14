@@ -54,7 +54,7 @@ public class PostController {
         if (author == null) {
             throw new IllegalArgumentException();
         }
-        Post post = new Post(null, title, content, new Timestamp(System.currentTimeMillis()), null, author, new ArrayList<>());
+        Post post = new Post(null, title, content, new Timestamp(System.currentTimeMillis()), null, new ArrayList<>(), author);
         post = postService.addPost(post);
 
         try {
