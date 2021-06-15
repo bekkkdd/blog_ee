@@ -5,6 +5,8 @@ import com.bekdaulet.blog_project.models.User;
 import com.bekdaulet.blog_project.services.impl.PostService;
 import com.bekdaulet.blog_project.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,7 @@ public class PostController {
     public String posts(
             Model model
     ) {
-        List<Post> posts = postService.getAllPosts();
+        List<Post> posts = postService.getAllPostsByAuthors(userServiceImpl.getCurrentUser().getChannels());
         model.addAttribute("posty", posts);
         return "posts";
     }
@@ -111,5 +113,15 @@ public class PostController {
         Post post = postService.getPostById(postId);
         model.addAttribute("post", post);
         return "postDetails";
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    @ResponseBody
+    public ResponseEntity<String> deletePostById(
+            Model model,
+            @PathVariable Long postId
+    ) {
+        postService.deletePost(postId);
+        return new ResponseEntity<>("Deleted",HttpStatus.OK);
     }
 }

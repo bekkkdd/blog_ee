@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -25,11 +27,23 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public List<Post> getAllPostsByAuthor(User user) {
+        return postRepository.findAllByAuthor(user);
+    }
+
+    public List<Post> getAllPostsByAuthors(Collection<User> authors) {
+        return postRepository.findByAuthorIds(authors.stream().map(User::getId).collect(Collectors.toList()));
+    }
+
     public Post addPost(Post post) {
         return postRepository.save(post);
     }
 
     public Post savePost(Post post) {
         return postRepository.save(post);
+    }
+
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
     }
 }

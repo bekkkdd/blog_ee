@@ -15,7 +15,9 @@
             <img class="bd-placeholder-img" src="https://i1.sndcdn.com/artworks-okKt1tIv85hoR3kr-j2YYew-t500x500.jpg"
                  width="250" height="250" alt="">
         </div>
+        <a href="#" th:onclick="'deletePost(' + ${postId} + ')'">DELETE POST</a>
     </div>
+
 
     <div id="comments" class="row mt-5">
         <div class="card" style="width: 27rem;" th:each="comment : ${post.comments}">
@@ -75,6 +77,18 @@
             url : "/comment/" + id,
             type : "DELETE",
             success : function(response) {
+            },
+            error : function(xhr, status, error) {
+            }
+        });
+    }
+
+    function deletePost(id){
+        $.ajax({
+            url : "/posts/" + id,
+            type : "DELETE",
+            success : function(response) {
+                window.open("/posts")
             },
             error : function(xhr, status, error) {
             }
