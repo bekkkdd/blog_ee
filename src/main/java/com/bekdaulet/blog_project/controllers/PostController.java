@@ -2,6 +2,7 @@ package com.bekdaulet.blog_project.controllers;
 
 import com.bekdaulet.blog_project.models.Post;
 import com.bekdaulet.blog_project.models.User;
+import com.bekdaulet.blog_project.services.impl.FileService;
 import com.bekdaulet.blog_project.services.impl.PostService;
 import com.bekdaulet.blog_project.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class PostController {
     PostService postService;
     @Autowired
     UserServiceImpl userServiceImpl;
+    @Autowired
+    FileService fileService;
 
     @GetMapping("/")
     public String posts() {
@@ -59,14 +62,7 @@ public class PostController {
         Post post = new Post(null, title, content, new Timestamp(System.currentTimeMillis()), null, new ArrayList<>(), author);
         post = postService.addPost(post);
 
-        try {
-            byte bytes[] = img.getBytes();
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File("/Users/bekkkdd/Desktop/IdeaProjects/Bitlab/Java EE/15.03.2021/blog_project/src/main/resources/imgs/" + "post-" + post.getId() + ".img")));
-            bos.write(bytes);
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileService.uploadPost(img , post);
 
         return "redirect:/posts/" + post.getId();
     }
