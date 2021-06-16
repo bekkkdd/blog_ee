@@ -41,7 +41,10 @@ public class WebConf implements WebMvcConfigurer {
     }
 
     @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**").addResourceLocations("file:uploads/");
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("/images/**")
+                .addResourceLocations("/Users/bekkkdd/Desktop/IdeaProjects/Bitlab/Java EE/15.03.2021/blog_project/src/main/resources/imgs/")
+                .setCachePeriod(0);
     }
 }
